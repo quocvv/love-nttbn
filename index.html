@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi em bé bỏng của tui... | Romantic Universe</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,600&family=Montserrat:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-pink: #ff4d94;
+            /* Hồng tươi hơn */
+            --text-glow: 0 0 25px rgba(255, 77, 148, 0.9);
+            /* Màu nền mới: Tím than đậm pha hồng */
+            --deep-romance: #190524;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--deep-romance);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND VŨ TRỤ LÃNG MẠN (NEW) --- */
+        .cosmic-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -4;
+            /* Gradient mới: Từ tím hồng sáng ở giữa -> tím than đậm ở viền */
+            background: radial-gradient(ellipse at center, #360a2e 0%, #190524 60%, #090214 100%);
+        }
+
+        /* Lớp sao lấp lánh (Có thêm hiệu ứng glow nhẹ) */
+        .star-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            background-image:
+                radial-gradient(1.5px 1.5px at 20px 30px, #fff, rgba(0, 0, 0, 0)),
+                radial-gradient(2px 2px at 40px 70px, #ffe6f2, rgba(0, 0, 0, 0)),
+                /* Sao hơi hồng */
+                radial-gradient(1px 1px at 90% 10%, #fff, rgba(0, 0, 0, 0));
+            background-size: 250px 250px;
+            opacity: 0.5;
+            /* Sáng hơn bản cũ */
+            filter: drop-shadow(0 0 3px #fff);
+        }
+
+        /* Tinh vân chính (Màu hồng tím sáng) */
+        /* Tối ưu hóa các lớp Nebula để giảm tải cho Safari */
+        .nebula-primary,
+        .nebula-secondary {
+            position: fixed;
+            pointer-events: none;
+            /* Ép chạy bằng GPU */
+            transform: translateZ(0);
+            will-change: transform;
+            /* Giảm độ nhòe xuống một chút nếu vẫn lag */
+            filter: blur(60px);
+            opacity: 0.6;
+        }
+
+        /* Tối ưu Icon */
+        .floating-icon {
+            position: fixed;
+            z-index: 5;
+            pointer-events: none;
+            will-change: transform;
+            /* Thay drop-shadow bằng text-shadow (nhẹ hơn 10 lần) */
+            text-shadow: 0 0 8px var(--primary-pink);
+            transform: translateZ(0);
+        }
+
+        /* Tối ưu ảnh Memory Card */
+        .memory-card {
+            position: fixed;
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            z-index: 10;
+            pointer-events: none;
+            /* Dùng border đơn giản thay vì box-shadow phức tạp */
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        @keyframes nebulaMove1 {
+            from {
+                transform: rotate(0deg) scale(1);
+            }
+
+            to {
+                transform: rotate(10deg) scale(1.1);
+            }
+        }
+
+        @keyframes nebulaMove2 {
+            from {
+                transform: rotate(0deg) translate(0, 0);
+            }
+
+            to {
+                transform: rotate(-5deg) translate(-5%, -5%);
+            }
+        }
+
+        /* --- CÁC PHẦN TỬ KHÁC GIỮ NGUYÊN LOGIC --- */
+        .scene {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .lyrics-stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        #active-lyric {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 9vw, 4.5rem);
+            /* Chữ to hơn một chút */
+            text-shadow: var(--text-glow);
+            transition: all 0.8s ease;
+            opacity: 0;
+            margin: 0;
+            color: #fff0f5;
+            /* Màu chữ trắng hồng */
+        }
+
+        /* Slide ảnh với viền phát sáng nhẹ */
+        .memory-card {
+            position: fixed;
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            z-index: 10;
+            pointer-events: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 77, 148, 0.2);
+            /* Thêm viền sáng hồng */
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .shape-rect {
+            border-radius: 15px;
+            height: 170px;
+        }
+
+        .shape-circle {
+            border-radius: 50%;
+        }
+
+        .heart-frame {
+            clip-path: polygon(50% 15%, 80% 0%, 100% 25%, 100% 55%, 50% 100%, 0% 55%, 0% 25%, 20% 0%);
+        }
+
+        .floating-icon {
+            position: fixed;
+            z-index: 5;
+            pointer-events: none;
+            will-change: transform;
+            filter: drop-shadow(0 0 5px var(--primary-pink));
+            /* Icon phát sáng */
+        }
+
+        .glass-box {
+            background: rgba(40, 10, 40, 0.2);
+            /* Kính màu tối ấm hơn */
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 45px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 100, 150, 0.15);
+            max-width: 650px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-start {
+            padding: 20px 60px;
+            background: none;
+            border: 2px solid var(--primary-pink);
+            color: white;
+            font-family: 'Montserrat';
+            font-weight: 600;
+            letter-spacing: 7px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.4s;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(255, 77, 148, 0.3);
+        }
+
+        .btn-start:hover {
+            background: var(--primary-pink);
+            box-shadow: 0 0 60px var(--primary-pink);
+            transform: scale(1.05);
+        }
+
+        /* --- SLIDESHOW STYLES --- */
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            /* Độ rộng slide */
+            height: 400px;
+            margin: 20px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 3px solid rgba(255, 77, 148, 0.3);
+            box-shadow: 0 0 30px rgba(255, 77, 148, 0.4);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            /* Hiệu ứng mờ dần */
+            object-fit: cover;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slideshow-overlay {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(25, 5, 36, 0.8));
+            padding: 15px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cosmic-canvas"></div>
+    <div class="star-field"></div>
+    <div class="nebula-primary"></div>
+    <div class="nebula-secondary"></div>
+
+    <div id="intro-scene" class="scene">
+        <div style="text-align: center;">
+            <h1
+                style="font-family: 'Dancing Script'; font-size: 4rem; color: var(--primary-pink); text-shadow: var(--text-glow); margin-bottom: 10px;">
+                Cuộc đời này có 2 người cô dạy anh nhiều nhất... <br>
+                Một là cô đơn, Hai là cô ấy... <br>
+            </h1>
+            <h2 style="letter-spacing: 8px; font-weight: 300; margin-bottom: 40px; opacity: 0.9; font-size: 1rem;">
+                Món quà nhỏ dành cho Nguyễn Trần Thị Bích Ngọc</h2>
+            <button class="btn-start" onclick="startExperience()">Bấm vô đây nè</button>
+        </div>
+    </div>
+
+    <div id="main-content" style="display: none;">
+
+        <section class="scene">
+            <div class="lyrics-stage">
+                <h1 id="active-lyric">...</h1>
+            </div>
+            <div
+                style="position: absolute; bottom: 50px; opacity: 0.6; font-size: 0.8rem; letter-spacing: 5px; color: #ffcce0;">
+                KÉO XUỐNG ĐỂ XEM TIẾP</div>
+        </section>
+
+        <section class="scene">
+            <div class="glass-box">
+                <h2 style="font-family: 'Playfair Display'; color: var(--primary-pink); font-size: 2.2rem;">Gửi Em, Thế
+                    Giới Của Anh</h2>
+                <p style="line-height: 2.2; font-weight: 400; font-size: 1.15rem; color: rgba(255,240,245,0.9);">
+                    Anh biết thời gian qua chỉ vì anh không chịu trưởng thành mà để cô gái của anh phải gồng mình lên
+                    gánh vác mọi chuyện nhỏ to. Mà đúng lẽ ra anh phải chấp nhận trưởng thành vươn cao cho cô gái ấy dựa
+                    bóng. Đến lúc anh nhận ra thì đã làm tổn thương cô gái ấy nhiều mất rùi, anh xin được sửa sai không
+                    xin
+                    được tha thứ. Anh chỉ định quay lại khi anh đã thật sự đủ khả năng đối diện với sai lầm của mình,
+                    nhưng "anh nhớ em lắm" cho anh một lần được sống đúng với bản thân mình đồng hành và che chở cho em
+                    nha. Anh
+                    không thể để lỡ mất em "người quan trọng nhất" của anh, anh không hứa sẽ giàu như Elon Musk nhưng
+                    anh dám hứa kiếm thật nhiều tiền để em được là công chúa. Chúng ta đừng bao giờ rời xa nhau nữa nhé!
+                </p>
+            </div>
+        </section>
+        <section class="scene">
+            <div class="glass-box" style="max-width: 800px;">
+                <h2
+                    style="font-family: 'Playfair Display'; color: var(--primary-pink); font-size: 2rem; margin-bottom: 20px;">
+                    Khoảnh khắc của chúng mình
+                </h2>
+
+                <div class="slideshow-container" id="slideshow">
+                </div>
+
+                <p style="font-family: 'Dancing Script'; font-size: 1.4rem; color: #ffcce0; margin-top: 15px;">
+                    Mỗi tấm hình là một kỷ niệm vô giá...
+                </p>
+            </div>
+        </section>
+        <section class="scene">
+            <div class="glass-box">
+                <video id="myVideo" controls playsinline>
+                    <source src="/NTTBN/mp4/1000009420.mp4" type="video/mp4">
+                    Trình duyệt của em không hỗ trợ video này.
+                </video>
+                <p
+                    style="margin-top: 25px; font-family: 'Dancing Script'; font-size: 1.5rem; color: var(--primary-pink);">
+                    Và đây là điều anh muốn nói...</p>
+            </div>
+        </section>
+
+        <footer class="scene">
+            <div style="text-align: center;">
+                <h1
+                    style="font-family: 'Dancing Script'; font-size: 5rem; text-shadow: var(--text-glow); margin: 0; color: #fff0f5;">
+                    Yêu Em Vô Tận</h1>
+                <div style="font-size: 2rem; margin-top: 20px; color: var(--primary-pink);">❤️ ✨ 💖</div>
+            </div>
+        </footer>
+    </div>
+
+    <audio id="bgMusic" src="/NTTBN/mp3/sing.mp3"></audio>
+
+    <script>
+        const lyricsData = [
+            { time: 2, text: "Anh gửi hết tình cảm để làm cho em một món quà nhỏ" },
+            { time: 6, text: "Hy vọng rằng em sẽ thích nó" },
+            { time: 8, text: "Chỉ là anh chợt nhận ra quá muộn" },
+            { time: 11, text: "Mà đã quên đi mất mình cũng có thể là một chàng trai lãng mạn" },
+            { time: 15, text: "Anh đã từng hứa sẽ đưa em đi phiêu bạt muôn nơi" },
+            { time: 19, text: "Thế nhưng đi chưa được nửa đường anh lại quay trở về điểm xuất phát" },
+            { time: 23, text: "Rơi vào biển tự trách mình sâu đậm..." },
+            { time: 29.6, text: "Chợt phát hiện rằng anh không thể xa em" },
+            { time: 32.85, text: "Anh quyết định quay trở lại" },
+            { time: 36.6, text: "Nhưng em đã không còn ở đó nữa rồi..." },
+            { time: 43, text: "Anh có thể chấp nhận mọi thứ của em" },
+            { time: 45, text: "Tất cả tính cách của em" },
+            { time: 47, text: "Anh có thể dẫn em đi ăn rất nhiều" },
+            { time: 49, text: "Rất nhiều món ngon" },
+            { time: 51, text: "Thỉnh thoảng anh có thể đem đến cho em" },
+            { time: 52.45, text: "Những điều ngọt ngào bé nhỏ" },
+            { time: 54, text: "Tựa như mấy năm trước, mỗi năm đều dành cho em" },
+            { time: 56, text: "Mỗi ngày sẽ mang đến cho em những niềm vui bất ngờ" },
+            { time: 58, text: "Mọi tổn thương của em anh đều có thể chữa lành" },
+            { time: 61, text: "Và chỉ có em mới có thể đem đến cho anh những niềm vui" },
+            { time: 65, text: "Chúng ta đừng bao giờ rời xa nhau nữa nhé <3" }
+        ];
+
+        const photos = [
+            'img/_MG_4541.JPG', 'img/1000001062.gif', 'img/1000001254.jpg', 'img/1000001787.png', 'img/1000001994.png', 'img/1000004067.jpg',
+            'img/1000004073.jpg', 'img/1000004074.jpg', 'img/1000004075.jpg', 'img/1000004083.png', 'img/1000004085.png', 'img/1000004089.jpg', 'img/1000004111.jpg',
+            'img/1000004374.jpg', 'img/1000004381.jpg', 'img/1000004382.jpg', 'img/1000009380.jpg', 'img/1000009383.jpg', 'img/1000009384.jpg', 'img/1000009385.jpg',
+            'img/1000009386.jpg', 'img/1000009387.jpg', 'img/1000009388.jpg', 'img/1000009389.jpg', 'img/1000009390.jpg', 'img/1000009391.jpg', 'img/1000009392.jpg',
+            'img/1000009393.jpg', 'img/1000009394.jpg', 'img/1000009395.jpg', 'img/1000009396.jpg', 'img/1000009397.jpg', 'img/1000009398.jpg', 'img/1000009399.jpg',
+            'img/1000008194.webp', 'img/1000009411.jpg', 'img/1000008282.jpg', 'img/1000008308.jpg', 'img/1000009400.jpg',
+            'img/1000009401.jpg', 'img/1000009407.jpg', 'img/1000009402.jpg', 'img/1000009409.jpg', 'img/1000009404.jpg', 'img/20260216_145932.jpg',
+            'img/034AA765-4D0E-4248-B6A2-B237BE9EC8B1.JPEG', 'img/8559EEC6-E270-42B0-A662-45DD9E56BE98.JPEG', 'img/20260216_145932.jpg', 'img/1000009410.jpg', 'img/1000009405.jpg', 'img/1000009419.jpg', 'img/1000009421.jpg', 'img/1000009423.jpg', 'img/1000009425.jpg',
+            'img/1000009428.jpg', 'img/1000009438.jpg', 'img/1000009439.jpg', 'img/IMG_0064.PNG', 'img/IMG_1262.JPEG', 'img/IMG_1270.JPEG', 'img/IMG_1258.JPEG', 'img/IMG_1250.JPEG', 'img/IMG_1257.JPEG'
+        ];
+
+        const icons = ['❤️', '💖', '🌸', '🌹', '🥺'];
+        const shapes = ['shape-rect', 'shape-circle', 'heart-frame'];
+
+        function startExperience() {
+            document.getElementById('intro-scene').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+
+            const music = document.getElementById('bgMusic');
+            music.play();
+
+            setInterval(spawnIcon, 150);
+            setInterval(spawnPhoto, 1200);
+
+            let lastIndex = -1;
+
+            music.ontimeupdate = () => {
+                const currentIndex = lyricsData.findLastIndex(item => music.currentTime >= item.time);
+
+                if (currentIndex !== -1 && currentIndex !== lastIndex) {
+                    lastIndex = currentIndex;
+                    const el = document.getElementById('active-lyric');
+
+                    // Chỉnh sửa: Xóa bỏ -50% để chữ không bị lệch trái
+                    el.style.opacity = 0;
+                    el.style.transform = "translate3d(0, 20px, 0) scale(0.9)";
+
+                    setTimeout(() => {
+                        el.innerHTML = lyricsData[currentIndex].text;
+                        el.style.opacity = 1;
+                        el.style.transform = "translate3d(0, 0, 0) scale(1)";
+                    }, 400);
+                }
+            };
+        }
+
+        function spawnIcon() {
+            const icon = document.createElement('div');
+            icon.className = 'floating-icon';
+            icon.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            icon.style.left = (Math.random() * 90 + 5) + 'vw';
+            icon.style.bottom = '-5vh';
+            document.body.appendChild(icon);
+
+            icon.animate([
+                { transform: 'translate3d(0, 0, 0) rotate(0deg)', opacity: 0 },
+                { transform: `translate3d(${(Math.random() - 0.5) * 40}px, -50vh, 0) rotate(180deg)`, opacity: 0.8, offset: 0.5 },
+                { transform: `translate3d(0, -110vh, 0) rotate(360deg)`, opacity: 0 }
+            ], {
+                duration: 5000 + Math.random() * 3000,
+                easing: 'linear'
+            }).onfinish = () => icon.remove();
+        }
+
+        let photoIndex = 0; // Biến đếm để theo dõi ảnh hiện tại
+
+        function spawnPhoto() {
+            if (photos.length === 0) return;
+
+            const img = document.createElement('img');
+
+            // Lấy ảnh theo thứ tự thay vì ngẫu nhiên
+            img.src = photos[photoIndex];
+
+            // Tăng index, nếu hết ảnh thì quay lại từ đầu (0)
+            photoIndex = (photoIndex + 1) % photos.length;
+
+            const shapeClass = shapes[Math.floor(Math.random() * shapes.length)];
+            img.className = `memory-card ${shapeClass}`;
+
+            img.style.left = (Math.random() * 75 + 10) + 'vw';
+            img.style.top = '110vh';
+
+            document.body.appendChild(img);
+
+            const drift = (Math.random() - 0.5) * 150;
+            img.animate([
+                { transform: 'translate3d(0, 0, 0) scale(0.6)', opacity: 0 },
+                { transform: `translate3d(${drift / 2}px, -60vh, 0) scale(1)`, opacity: 1, offset: 0.5 },
+                { transform: `translate3d(${drift}px, -120vh, 0) scale(1.1)`, opacity: 0 }
+            ], {
+                duration: 10000 + Math.random() * 4000,
+                easing: 'ease-out'
+            }).onfinish = () => img.remove();
+        }
+
+        function initSlideshow() {
+            const container = document.getElementById('slideshow');
+            // Lấy ngẫu nhiên khoảng 10 tấm ảnh từ danh sách photos có sẵn
+            const selectedPhotos = [...photos].sort(() => 0.5 - Math.random()).slice(0, 80);
+
+            selectedPhotos.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'slide' + (index === 0 ? ' active' : '');
+                container.appendChild(img);
+            });
+
+            let currentSlide = 0;
+            const slides = container.getElementsByClassName('slide');
+
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 4000); // Đổi ảnh sau mỗi 4 giây
+        }
+
+        // Gọi hàm này bên trong hàm startExperience()
+        const originalStartExperience = startExperience;
+        startExperience = function () {
+            originalStartExperience();
+            initSlideshow();
+        };
+
+        // --- LOGIC XỬ LÝ NHẠC VÀ VIDEO ---
+        const music = document.getElementById('bgMusic');
+        const video = document.getElementById('myVideo');
+
+        // Khi nhấn nút Play trên video
+        video.addEventListener('play', () => {
+            if (!music.paused) {
+                music.pause(); // Dừng nhạc nền
+            }
+        });
+
+        // Khi nhấn nút Pause trên video
+        video.addEventListener('pause', () => {
+            music.play(); // Phát lại nhạc nền
+        });
+
+        // Khi video chạy hết (kết thúc)
+        video.addEventListener('ended', () => {
+            music.play(); // Phát lại nhạc nền
+        });
+
+        // Mẹo: Nếu muốn nhấn ra vùng trống ngoài video để nhạc chạy lại (như bạn yêu cầu)
+        document.addEventListener('click', (e) => {
+            // Nếu click không phải vào video và video đang dừng
+            if (e.target !== video && video.paused) {
+                music.play();
+            }
+        });
+    </script>
+</body>
+
+</html>
