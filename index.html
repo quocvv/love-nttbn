@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gửi em bé bỏng của tui... | Romantic Universe</title>
+    <title>Gửi em bé bỏng của tui... </title>
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,600&family=Montserrat:wght@300;400;600&display=swap"
         rel="stylesheet">
@@ -12,9 +12,9 @@
     <style>
         :root {
             --primary-pink: #ff4d94;
-            /* Hồng tươi hơn */
+
             --text-glow: 0 0 25px rgba(255, 77, 148, 0.9);
-            /* Màu nền mới: Tím than đậm pha hồng */
+
             --deep-romance: #190524;
         }
 
@@ -30,7 +30,7 @@
             overflow-x: hidden;
         }
 
-        /* --- BACKGROUND VŨ TRỤ LÃNG MẠN (NEW) --- */
+
         .cosmic-canvas {
             position: fixed;
             top: 0;
@@ -38,11 +38,11 @@
             width: 100%;
             height: 100%;
             z-index: -4;
-            /* Gradient mới: Từ tím hồng sáng ở giữa -> tím than đậm ở viền */
+
             background: radial-gradient(ellipse at center, #360a2e 0%, #190524 60%, #090214 100%);
         }
 
-        /* Lớp sao lấp lánh (Có thêm hiệu ứng glow nhẹ) */
+
         .star-field {
             position: fixed;
             top: 0;
@@ -53,40 +53,39 @@
             background-image:
                 radial-gradient(1.5px 1.5px at 20px 30px, #fff, rgba(0, 0, 0, 0)),
                 radial-gradient(2px 2px at 40px 70px, #ffe6f2, rgba(0, 0, 0, 0)),
-                /* Sao hơi hồng */
+
                 radial-gradient(1px 1px at 90% 10%, #fff, rgba(0, 0, 0, 0));
             background-size: 250px 250px;
             opacity: 0.5;
-            /* Sáng hơn bản cũ */
+
             filter: drop-shadow(0 0 3px #fff);
         }
 
-        /* Tinh vân chính (Màu hồng tím sáng) */
-        /* Tối ưu hóa các lớp Nebula để giảm tải cho Safari */
+
         .nebula-primary,
         .nebula-secondary {
             position: fixed;
             pointer-events: none;
-            /* Ép chạy bằng GPU */
+
             transform: translateZ(0);
             will-change: transform;
-            /* Giảm độ nhòe xuống một chút nếu vẫn lag */
+
             filter: blur(60px);
             opacity: 0.6;
         }
 
-        /* Tối ưu Icon */
+
         .floating-icon {
             position: fixed;
             z-index: 5;
             pointer-events: none;
             will-change: transform;
-            /* Thay drop-shadow bằng text-shadow (nhẹ hơn 10 lần) */
+
             text-shadow: 0 0 8px var(--primary-pink);
             transform: translateZ(0);
         }
 
-        /* Tối ưu ảnh Memory Card */
+
         .memory-card {
             position: fixed;
             width: 130px;
@@ -94,7 +93,7 @@
             object-fit: cover;
             z-index: 10;
             pointer-events: none;
-            /* Dùng border đơn giản thay vì box-shadow phức tạp */
+
             border: 2px solid rgba(255, 255, 255, 0.3);
             will-change: transform;
             transform: translateZ(0);
@@ -120,7 +119,7 @@
             }
         }
 
-        /* --- CÁC PHẦN TỬ KHÁC GIỮ NGUYÊN LOGIC --- */
+
         .scene {
             position: relative;
             min-height: 100vh;
@@ -143,16 +142,16 @@
         #active-lyric {
             font-family: 'Dancing Script', cursive;
             font-size: clamp(2.5rem, 9vw, 4.5rem);
-            /* Chữ to hơn một chút */
+
             text-shadow: var(--text-glow);
             transition: all 0.8s ease;
             opacity: 0;
             margin: 0;
             color: #fff0f5;
-            /* Màu chữ trắng hồng */
+
         }
 
-        /* Slide ảnh với viền phát sáng nhẹ */
+
         .memory-card {
             position: fixed;
             width: 130px;
@@ -161,7 +160,7 @@
             z-index: 10;
             pointer-events: none;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 77, 148, 0.2);
-            /* Thêm viền sáng hồng */
+
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -184,12 +183,12 @@
             pointer-events: none;
             will-change: transform;
             filter: drop-shadow(0 0 5px var(--primary-pink));
-            /* Icon phát sáng */
+
         }
 
         .glass-box {
             background: rgba(40, 10, 40, 0.2);
-            /* Kính màu tối ấm hơn */
+
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             padding: 45px;
@@ -221,12 +220,12 @@
             transform: scale(1.05);
         }
 
-        /* --- SLIDESHOW STYLES --- */
+
         .slideshow-container {
             position: relative;
             width: 100%;
             max-width: 500px;
-            /* Độ rộng slide */
+
             height: 400px;
             margin: 20px auto;
             border-radius: 20px;
@@ -243,7 +242,7 @@
             height: 100%;
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
-            /* Hiệu ứng mờ dần */
+
             object-fit: cover;
         }
 
@@ -306,15 +305,31 @@
                 <h2 style="font-family: 'Playfair Display'; color: var(--primary-pink); font-size: 2.2rem;">Gửi Em, Thế
                     Giới Của Anh</h2>
                 <p style="line-height: 2.2; font-weight: 400; font-size: 1.15rem; color: rgba(255,240,245,0.9);">
-                    Anh biết thời gian qua chỉ vì anh không chịu trưởng thành mà để cô gái của anh phải gồng mình lên
-                    gánh vác mọi chuyện nhỏ to. Mà đúng lẽ ra anh phải chấp nhận trưởng thành vươn cao cho cô gái ấy dựa
-                    bóng. Đến lúc anh nhận ra thì đã làm tổn thương cô gái ấy nhiều mất rùi, anh xin được sửa sai không
-                    xin
-                    được tha thứ. Anh chỉ định quay lại khi anh đã thật sự đủ khả năng đối diện với sai lầm của mình,
-                    nhưng "anh nhớ em lắm" cho anh một lần được sống đúng với bản thân mình đồng hành và che chở cho em
-                    nha. Anh
-                    không thể để lỡ mất em "người quan trọng nhất" của anh, anh không hứa sẽ giàu như Elon Musk nhưng
-                    anh dám hứa kiếm thật nhiều tiền để em được là công chúa. Chúng ta đừng bao giờ rời xa nhau nữa nhé!
+                    Anh biết thời gian qua, chỉ vì sự chưa trưởng thành của mình mà anh đã để cô gái của anh phải gồng
+                    mình gánh vác mọi chuyện nhỏ to. Đáng lẽ anh phải là chỗ dựa cho em, thì anh lại làm tổn thương em
+                    quá
+                    nhiều. Anh xin được sửa sai, không dám xin em tha thứ ngay bây giờ.
+
+                    Anh đã định chỉ quay lại khi đã đủ bản lĩnh đối diện với mọi sai lầm. Nhưng vì 'anh nhớ em
+                    lắm' cho anh một lần được sống đúng với trách nhiệm, được đồng hành và che chở cho em nhé.
+
+                    Điều anh hối tiếc nhất là anh đã chuẩn bị xong kế hoạch cho tương lai của tụi mình trong năm tới
+                    rồi, vậy mà lại chưa kịp nói ra. Không phải anh bỏ mặc em đâu, chỉ là lúc đó anh đã quá do dự và
+                    chọn cách đối mặt ngu ngốc nhất.
+
+                    Năm vừa qua anh đã giấu em và gia đình về những vấp ngã của mình, nhưng anh đã vượt qua được rồi.
+                    Cái giá phải trả bằng tiền là cái giá rẻ nhất, còn với em anh không muốn nó trở thành hai chữ 'giá
+                    như'. Anh sẽ nỗ lực gấp nhiều lần để theo kịp sự trưởng thành của em.
+
+                    Anh hứa sẽ làm tất cả để em có được sự bình yên và hạnh phúc nhất khi ở bên anh. Anh nghĩ, lúc này
+                    anh không phải là người duy nhất thấy trống trải đâu. Anh xót khi thấy ánh mắt của bà khi nhắc về
+                    em,
+                    nó trĩu nặng và mong chờ lắm.
+
+                    Anh chưa dám nói thật chuyện của tụi mình với ai, nhưng cả nhà ai cũng thương và hỏi han về em suốt.
+                    Nhìn mọi người chờ đợi, nhìn bà mong ngóng, anh lại càng thấy mình tệ vì đã để lỡ mất em 'một người
+                    quan
+                    trọng' như thế nào.. Chúng ta đừng rời xa nhau nữa nhé!
                 </p>
             </div>
         </section>
@@ -383,7 +398,7 @@
         ];
 
         const photos = [
-             'img/1000001062.gif', 'img/1000001254.jpg', 'img/1000001787.png', 'img/1000001994.png', 'img/1000004067.jpg',
+            'img/1000001062.gif', 'img/1000001254.jpg', 'img/1000001787.png', 'img/1000001994.png', 'img/1000004067.jpg',
             'img/1000004073.jpg', 'img/1000004074.jpg', 'img/1000004075.jpg', 'img/1000004083.png', 'img/1000004085.png', 'img/1000004089.jpg', 'img/1000004111.jpg',
             'img/1000004374.jpg', 'img/1000004381.jpg', 'img/1000004382.jpg', 'img/1000009380.jpg', 'img/1000009383.jpg', 'img/1000009384.jpg', 'img/1000009385.jpg',
             'img/1000009386.jpg', 'img/1000009387.jpg', 'img/1000009388.jpg', 'img/1000009389.jpg', 'img/1000009390.jpg', 'img/1000009391.jpg', 'img/1000009392.jpg',
@@ -416,7 +431,7 @@
                     lastIndex = currentIndex;
                     const el = document.getElementById('active-lyric');
 
-                    // Chỉnh sửa: Xóa bỏ -50% để chữ không bị lệch trái
+
                     el.style.opacity = 0;
                     el.style.transform = "translate3d(0, 20px, 0) scale(0.9)";
 
@@ -447,17 +462,17 @@
             }).onfinish = () => icon.remove();
         }
 
-        let photoIndex = 0; // Biến đếm để theo dõi ảnh hiện tại
+        let photoIndex = 0;
 
         function spawnPhoto() {
             if (photos.length === 0) return;
 
             const img = document.createElement('img');
 
-            // Lấy ảnh theo thứ tự thay vì ngẫu nhiên
+
             img.src = photos[photoIndex];
 
-            // Tăng index, nếu hết ảnh thì quay lại từ đầu (0)
+
             photoIndex = (photoIndex + 1) % photos.length;
 
             const shapeClass = shapes[Math.floor(Math.random() * shapes.length)];
@@ -481,7 +496,7 @@
 
         function initSlideshow() {
             const container = document.getElementById('slideshow');
-            // Lấy ngẫu nhiên khoảng 10 tấm ảnh từ danh sách photos có sẵn
+
             const selectedPhotos = [...photos].sort(() => 0.5 - Math.random()).slice(0, 80);
 
             selectedPhotos.forEach((src, index) => {
@@ -498,40 +513,40 @@
                 slides[currentSlide].classList.remove('active');
                 currentSlide = (currentSlide + 1) % slides.length;
                 slides[currentSlide].classList.add('active');
-            }, 4000); // Đổi ảnh sau mỗi 4 giây
+            }, 4000);
         }
 
-        // Gọi hàm này bên trong hàm startExperience()
+
         const originalStartExperience = startExperience;
         startExperience = function () {
             originalStartExperience();
             initSlideshow();
         };
 
-        // --- LOGIC XỬ LÝ NHẠC VÀ VIDEO ---
+
         const music = document.getElementById('bgMusic');
         const video = document.getElementById('myVideo');
 
-        // Khi nhấn nút Play trên video
+
         video.addEventListener('play', () => {
             if (!music.paused) {
-                music.pause(); // Dừng nhạc nền
+                music.pause();
             }
         });
 
-        // Khi nhấn nút Pause trên video
+
         video.addEventListener('pause', () => {
-            music.play(); // Phát lại nhạc nền
+            music.play();
         });
 
-        // Khi video chạy hết (kết thúc)
+
         video.addEventListener('ended', () => {
-            music.play(); // Phát lại nhạc nền
+            music.play();
         });
 
-        // Mẹo: Nếu muốn nhấn ra vùng trống ngoài video để nhạc chạy lại (như bạn yêu cầu)
+
         document.addEventListener('click', (e) => {
-            // Nếu click không phải vào video và video đang dừng
+
             if (e.target !== video && video.paused) {
                 music.play();
             }
